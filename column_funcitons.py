@@ -8,10 +8,6 @@ def open_file(self):
     # 如果已经打开了一个文件，先关闭它
     if self.excel_handler is not None:
         self.excel_handler.close()
-        # 移除所有的标签页
-        for tab in self.notebook.tabs():
-            self.notebook.forget(tab)
-
     self.file_path = filedialog.askopenfilename()
     if self.file_path:
         self.excel_handler = ExcelHandler(self.file_path)
@@ -37,16 +33,33 @@ def update_tables(self):
             #
             # for index, row in sheet_data.iterrows():
             #     tree.insert("", "end", values=row.tolist())
+
 def _update_table(self, name, data):
+    # 检查标签页是否已存在，如果存在则删除
+    for tab_index in range(len(self.notebook.tabs())):
+        tab_name = self.notebook.tab(tab_index, option="text")
+        if tab_name == name:
+            self.notebook.forget(tab_index)
+            break
+    # 创建新的标签页
     tree = ttk.Treeview(self.notebook)
     self.notebook.add(tree, text=name)
     tree["columns"] = list(data.columns)
     tree["show"] = "headings"
     for col in data.columns:
         tree.heading(col, text=col)
-
     for index, row in data.iterrows():
         tree.insert("", "end", values=row.tolist())
+# def _update_table(self, name, data):
+#     tree = ttk.Treeview(self.notebook)
+#     self.notebook.add(tree, text=name)
+#     tree["columns"] = list(data.columns)
+#     tree["show"] = "headings"
+#     for col in data.columns:
+#         tree.heading(col, text=col)
+#
+#     for index, row in data.iterrows():
+#         tree.insert("", "end", values=row.tolist())
 def get_selected_sheet_name(self):
     # 通过 notebook 组件获取当前选中的 tab 名字
     return self.notebook.tab(self.notebook.select(), "text")
