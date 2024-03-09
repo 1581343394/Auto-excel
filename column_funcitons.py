@@ -23,16 +23,6 @@ def update_tables(self):
         for sheet_name in self.excel_handler.get_sheet_names():
             sheet_data = self.excel_handler.data[sheet_name]
             _update_table(self,sheet_name, sheet_data)
-            # 创建表格并添加到Notebook
-            # tree = ttk.Treeview(self.notebook)
-            # self.notebook.add(tree, text=sheet_name)
-            # tree["columns"] = list(sheet_data.columns)
-            # tree["show"] = "headings"
-            # for col in sheet_data.columns:
-            #     tree.heading(col, text=col)
-            #
-            # for index, row in sheet_data.iterrows():
-            #     tree.insert("", "end", values=row.tolist())
 
 def _update_table(self, name, data):
     # 检查标签页是否已存在，如果存在则删除
@@ -50,16 +40,6 @@ def _update_table(self, name, data):
         tree.heading(col, text=col)
     for index, row in data.iterrows():
         tree.insert("", "end", values=row.tolist())
-# def _update_table(self, name, data):
-#     tree = ttk.Treeview(self.notebook)
-#     self.notebook.add(tree, text=name)
-#     tree["columns"] = list(data.columns)
-#     tree["show"] = "headings"
-#     for col in data.columns:
-#         tree.heading(col, text=col)
-#
-#     for index, row in data.iterrows():
-#         tree.insert("", "end", values=row.tolist())
 def get_selected_sheet_name(self):
     # 通过 notebook 组件获取当前选中的 tab 名字
     return self.notebook.tab(self.notebook.select(), "text")

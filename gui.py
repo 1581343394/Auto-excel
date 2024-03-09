@@ -26,6 +26,13 @@ class Application(tk.Tk):
             content = self.txt_code.get("1.0", tk.END)
             with open(file_path, 'w') as file:
                 file.write(content)
+
+    def on_model_selected(self, event):
+        selected_model_type = self.selected_model_type.get()
+        # 在这里根据选择的模型类型更新 config.ini 文件中的 selected_model 项
+
+    def on_model_selected(self, event):
+        selected_model_type = self.selected_model_type.get()
     def __init__(self):
         super().__init__()
         self.title("Excel Processor")
@@ -116,11 +123,19 @@ class Application(tk.Tk):
         # 创建发送按钮
         self.btn_send = tk.Button(btn_frame, text="发送", command=lambda: gh.GPTHandler.send_promt(self), bg='green',
                                   fg='white')  # 设置按钮颜色为绿色，字体颜色为白色
-        self.btn_send.grid(row=0, column=0, padx=10, pady=10)
+        self.btn_send.grid(row=0, column=1, padx=10, pady=10)
 
         # 创建执行按钮
         self.btn_execute = tk.Button(btn_frame, text="执行", command=lambda:cf.execute_code(self), bg='green',
                                      fg='white')  # 设置按钮颜色为绿色，字体颜色为白色
-        self.btn_execute.grid(row=0, column=1, padx=10, pady=10)
+        self.btn_execute.grid(row=0, column=2, padx=10, pady=10)
+        # 创建下拉框
+        model_types = ["gpt-3.5", "文心一言3.0", "智普清言","gpt-4.0","claude3"]  # 你的模型类型列表
+        self.selected_model_type = tk.StringVar(self)
+        self.selected_model_type.set(model_types[0])  # 设置默认选择
+        model_dropdown = ttk.Combobox(btn_frame, textvariable=self.selected_model_type, values=model_types)
+        model_dropdown.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        model_dropdown.bind("<<ComboboxSelected>>", self.on_model_selected)  # 绑定选择事件
+
 
 
